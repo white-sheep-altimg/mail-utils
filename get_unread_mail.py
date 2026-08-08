@@ -14,7 +14,11 @@ if len(sys.argv) < 2:
   print('Usage: python3 get_unread_mail.py <最大件数>', file=sys.stderr)
   sys.exit(1)
 
+# SQLiteはLIMITにパラメータバインドが使えないため、明示的なバリデーション後、安全に埋め込む
 maxnum = int(sys.argv[1])
+if maxnum <= 0 or maxnum > 10000:
+  print('Error: 最大件数は 1〜10000 の範囲で指定してください', file=sys.stderr)
+  sys.exit(1)
 
 # 1. データベースのパス
 db_path = os.path.expanduser(DB_PATH)
