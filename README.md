@@ -1,11 +1,12 @@
 # mail-utils
 
-macOS Mail の SQLite データベース（`Envelope Index`）からメール情報を取得・出力する Python ユーティリティ群。外部依存なし（標準ライブラリのみ）。
+macOS Mail の SQLite データベース（`Envelope Index`）からメール情報を取得・出力する Python ユーティリティと、Mail 経由で送信・返信する AppleScript の集合。Python スクリプトは外部依存なし（標準ライブラリのみ）。
 
 ## 前提条件
 
 - **macOS 専用**。macOS Mail が設定されている環境で動作
-- スクリプト実行前に macOS の「システム設定 → プライバシーとセキュリティ → フルディスクアクセス」で Terminal / Python に権限を付与すること
+- Python スクリプト実行前に「フルディスクアクセス」で Terminal / Python に権限を付与すること
+- AppleScript スクリプトは Mail と System Events へのアクセス許可を許可すること
 
 ## コマンド
 
@@ -25,6 +26,24 @@ python3 get_unread_mail.py <最大件数>
 
 INBOX の未読メールを最新順に JSON 配列で出力。
 
+### メール送信
+
+```bash
+osascript send_mail.scpt 'From' 'To' 'Subject' '本文'
+```
+
+新規メールを Mail アプリ上に作成（ウィンドウ表示）。
+
+### Message-ID 指定返信
+
+```bash
+osascript reply_by_message_id.scpt 'Message-ID' '[定型文]'
+```
+
+Message-ID からメールを検索し、返信ウィンドウを開いて定型文を貼り付けて送信。第2引数の定型文は省略可能（デフォルト文言あり）。
+メール検索がとっても遅いので実用的では無いと思いますが，サンプルとして入れておきます。
+
+
 ## アーキテクチャ
 
 ### get_mail_json.py
@@ -38,6 +57,19 @@ INBOX の未読メールを最新順に JSON 配列で出力。
 
 1. SQLite から `read = 0` かつ `mailbox_path LIKE '%INBOX%'` の条件で未読メールを検索
 2. 結果を JSON 配列として出力（日付・件名・送信者・message_id・rowid）
+
+### send_mail.scpt
+
+1. 引数（From, To, Subject, 本文）を受け取る
+2. Mail アプリに新規送信メッセージを作成（ウィンドウ表示）
+
+### reply_by_message_id.scpt
+
+1. Message-ID を引数で受け取り、`< >` や空白を正規化
+2. すべてのアカウント・メールボックスを走査して対象メールを検索
+3. 見つかったメールを返信ウィンドウ付きで開く
+4. 第2引数（またはデフォルト文言）をクリップボードにコピーし、System Events で `Cmd+V` 貼り付け
+5. 直前の送信メッセージを送信
 
 ## 設計上の注意
 
