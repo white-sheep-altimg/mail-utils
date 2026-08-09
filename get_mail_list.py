@@ -9,10 +9,18 @@ DB_PATH = '~/Library/Mail/V10/MailData/Envelope Index'
 
 
 # 取得するメールの最大件数
-# 例: python3 get_mail_json.py 20
+# 例: python3 get_mail_list.py 20
 if len(sys.argv) < 2:
-  print('Usage: python3 get_unread_mail.py <最大件数>', file=sys.stderr)
+  print('Usage: python3 get_mail_list.py <最大件数> [<メールステータス 0/1>]', file=sys.stderr)
   sys.exit(1)
+
+if len(sys.argv) >= 3:
+  readmode = int(sys.argv[2])
+  if readmode < 0 or readmode > 1:
+    print('Error: メールステータスは 未読：0または既読：1 で指定してください', file=sys.stderr)
+    sys.exit(1)
+else:
+  readmode = 0
 
 # SQLiteはLIMITにパラメータバインドが使えないため、明示的なバリデーション後、安全に埋め込む
 maxnum = int(sys.argv[1])
@@ -64,7 +72,7 @@ LEFT JOIN subjects s ON m.subject = s.rowid
 LEFT JOIN addresses a ON m.sender = a.rowid
 LEFT JOIN mailboxes mb ON m.mailbox = mb.rowid
 LEFT JOIN message_global_data d ON m.message_id = d.message_id
-WHERE m.read = 0
+WHERE m.read = {readmode}
   AND mb.url LIKE '%INBOX%'
 ORDER BY m.date_sent DESC
 LIMIT {maxnum};
@@ -77,7 +85,7 @@ conn.close()
 if not rows:
   print(
       json.dumps(
-          {'error': f'未読メールはありません'},
+          {'error': f'該当するメールはありません'},
           ensure_ascii=False,
       )
   )

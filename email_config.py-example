@@ -1,0 +1,10 @@
+config = {
+    'host': 'smtp.example.com',
+    'username': 'USERNAME',
+    'password': 'PASSWORD',
+    'port': 587,
+    'use_tls': False,
+    'from_email': 'foo@example.com',
+    'from_name': 'Foo Bar',
+    'envelope_from': 'foo@example.com',
+}
