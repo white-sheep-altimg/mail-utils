@@ -2,6 +2,9 @@
 
 macOS Mail の SQLite データベース（`Envelope Index`）からメール情報を取得・出力する Python ユーティリティ、SMTP 経由で送信・返信する Python スクリプト、Mail 経由で送信・返信する AppleScript の集合。Python スクリプトは外部依存なし（標準ライブラリのみ）。
 
+メールとは無関係ですが，Mac標準のカレンダーへイベントを登録するスクリプトも追加しました。
+
+
 ## 前提条件
 
 - **macOS 専用**。macOS Mail が設定されている環境で動作
@@ -59,6 +62,15 @@ osascript reply_by_message_id.scpt 'Message-ID' '[定型文]'
 
 Message-ID からメールを検索し、返信ウィンドウを開いて定型文を貼り付けて送信。第2引数の定型文は省略可能（デフォルト文言あり）。
 メール検索がとっても遅いので実用的では無いと思いますが、サンプルとして入れておきます。
+
+### カレンダーへのイベント登録
+
+```bash
+python icalendar_add_event.py 'TITLE' 'START' 'END' 'DESCRIPTION' ['LOCATION'] ['URL']
+```
+
+日付形式：'2026/08/10 10:00'
+
 
 ## 設定
 
