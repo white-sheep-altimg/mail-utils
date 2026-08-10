@@ -111,8 +111,8 @@ for i, row in enumerate(rows, 1):
     json += f"      \"subject\":    \"{subject}\",\n"
     json += f"      \"sender\":     \"{sender}\",\n"
     json += f"      \"message_id\": \"{message_id}\",\n"
-    json += f"      \"rowid\":      {rowid},\n"
-    json += f"      \"mailbox\":    \"{mailbox}\"\n"
+    json += f"      \"mailbox\":    \"{mailbox}\",\n"
+    json += f"      \"rowid\":      {rowid}\n"
     json +=  "    }"
     if i < len(rows):
         json += ","
