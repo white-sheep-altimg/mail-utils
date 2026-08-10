@@ -80,6 +80,7 @@ python icalendar_add_event.py 'TITLE' 'START' 'END' 'DESCRIPTION' ['LOCATION'] [
 
 | キー | 説明 |
 |------|------|
+| `get_mail_by_rowid` | get_mail_by_rowid.pyのパス |
 | `host` | SMTP サーバホスト |
 | `port` | ポート番号 |
 | `username` | 認証ユーザー名 |
@@ -88,7 +89,9 @@ python icalendar_add_event.py 'TITLE' 'START' 'END' 'DESCRIPTION' ['LOCATION'] [
 | `from_email` | 送信元メールアドレス |
 | `from_name` | 送信者名 |
 | `envelope_from` | envelope-from（HELO/EHLO用） |
+| `mailbox` | メールボックス名 |
 
+mailbox（メールボックス名）は必須ではありません。少し変わった運用をしているのでSQLで牽くと分かりにくく，便宜上追加したものです。
 
 
 ## アーキテクチャ

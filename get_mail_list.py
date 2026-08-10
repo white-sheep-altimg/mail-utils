@@ -1,12 +1,14 @@
-import json
 import os
-import sqlite3
 import sys
+import sqlite3
+import json
+from email_config import config
 
 ## データベース（必要に応じて V10 などのバージョン部分は環境に合わせてください）
 DB_PATH = '~/Library/Mail/V10/MailData/Envelope Index'
 
-
+## mailbox名のリスト
+MAILBOX = config['mailbox']
 
 # 取得するメールの最大件数
 # 例: python3 get_mail_list.py 20
@@ -66,7 +68,8 @@ SELECT
     s.subject AS subject_text,
     a.address AS sender_address,
     d.message_id_header AS message_id,
-    m.rowid AS rowid
+    m.rowid AS rowid,
+    m.mailbox AS mailbox
 FROM messages m
 LEFT JOIN subjects s ON m.subject = s.rowid
 LEFT JOIN addresses a ON m.sender = a.rowid
@@ -101,12 +104,15 @@ for i, row in enumerate(rows, 1):
     sender = row['sender_address'].replace('"', "")
     message_id = row['message_id'].replace('"', "")
     rowid = row['rowid']
+    mailbox = row['mailbox']
+    mailbox = MAILBOX[mailbox] if mailbox in MAILBOX else mailbox
     json +=  "    {\n"
     json += f"      \"date\":       \"{date}\",\n"
     json += f"      \"subject\":    \"{subject}\",\n"
     json += f"      \"sender\":     \"{sender}\",\n"
     json += f"      \"message_id\": \"{message_id}\",\n"
-    json += f"      \"rowid\":      {rowid}\n"
+    json += f"      \"rowid\":      {rowid},\n"
+    json += f"      \"mailbox\":    \"{mailbox}\"\n"
     json +=  "    }"
     if i < len(rows):
         json += ","

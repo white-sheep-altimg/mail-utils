@@ -158,6 +158,7 @@ if emlx_path and os.path.exists(emlx_path):
 
   # ヘッダ情報の抽出
   for key, value in msg.items():
+    key = 'Message-Id' if key == 'Message-ID' else key
     headers_dict[key] = value
 
   # 本文（ボディ）の抽出とデコード

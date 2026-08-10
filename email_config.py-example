@@ -1,4 +1,5 @@
 config = {
+    'get_mail_by_rowid': '/your/path/get_mail_by_rowid.py',
     'host': 'smtp.example.com',
     'username': 'USERNAME',
     'password': 'PASSWORD',
@@ -7,4 +8,6 @@ config = {
     'from_email': 'foo@example.com',
     'from_name': 'Foo Bar',
     'envelope_from': 'foo@example.com',
+
+    'mailbox': {0: 'foo/INBOX', 2: 'bar/INBOX', 5: 'baz/INBOX'},
 }

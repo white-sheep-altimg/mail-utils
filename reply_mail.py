@@ -7,7 +7,8 @@ import json
 import base64
 
 
-GET_MAIL_BY_ROWID = './get_mail_by_rowid.py'
+GET_MAIL_BY_ROWID = config['get_mail_by_rowid']
+VERBOSE = False
 
 def get_orig_mail(rowid):
     cmd = f"python {GET_MAIL_BY_ROWID} {rowid}"
@@ -28,6 +29,7 @@ def reply_email(from_addr, to_addr, subject, body, in_reply_to, references):
     msg['Message-ID'] = f"<{uuid.uuid4()}@{config['host']}>"
     msg['In-Reply-To'] = in_reply_to
     msg['References'] = in_reply_to + " " + references
+    if VERBOSE: print(f"  {msg['Subject']}\n  {msg['From']} -> {msg['To']}", file=sys.stderr)
 
     try:
         with smtplib.SMTP(config['host'], config['port']) as server:
@@ -52,7 +54,7 @@ if __name__ == "__main__":
 
     # 返信元メールを取得する（JSON形式）
     orig_mail = get_orig_mail(rowid)
-    if len(orig_mail) <= 0:
+    if len(orig_mail) <= 0 or 'error' in orig_mail:
         print(f"返信元メールが取得できませんでした: {rowid}", file=sys.stderr)
         sys.exit(1)
 
@@ -61,9 +63,9 @@ if __name__ == "__main__":
     subject = headers['Subject']
     from_addr = headers['From']
     to_addr = headers['To']
-    message_id = headers['Message-ID']
-    in_reply_to = headers['In-Reply-To']
-    references = headers['References']
+    message_id = headers['Message-Id'] if 'Message-Id' in headers else ""
+    in_reply_to = headers['In-Reply-To'] if 'In-Reply-To' in headers else ""
+    references = headers['References'] if 'References' in headers else ""
     orig_body = orig_mail['body']
     orig_body = f'> {orig_body}'
     orig_body = orig_body.replace("\\", "\\\\").replace("\n", "\n> ")
