@@ -17,18 +17,28 @@ macOS Mail の SQLite データベース（`Envelope Index`）からメール情
 ### メール単件取得（ROWID 指定）
 
 ```bash
-python3 get_mail_json.py <ROWID>
+python3 get_mail_by_rowid.py <ROWID>
 ```
 
 指定した ROWID のメールを JSON 形式で出力。ヘッダ情報と本文（text/plain 優先、なければ text/html をテキスト変換）を含む。
 
-### 未読メール一覧取得
+指定した ROWID のメールを JSON 形式で出力。ヘッダ情報と本文（text/plain 優先、なければ text/html をテキスト変換）を含む。
+
+### メール一覧取得
 
 ```bash
-python3 get_unread_mail.py <最大件数>
+python3 get_mail_list.py <最大件数> [<モード: 未読=0, 既読=1>]
+```
+最大件数はメールボックスから取得する件数のため，必ずしも最終出力とは一致しない。
+
+### メール一覧（日付絞り込み）
+
+```bash
+python3 get_mail_list_by_date.py <最大件数> [<対象日>] [<モード: 未読=0, 既読=1>]
 ```
 
-INBOX の未読メールを最新順に JSON 配列で出力。
+INBOX の指定された日付のメールを最新順に JSON 配列で出力。日付は '2026/01/10' のように指定する。
+最大件数はメールボックスから取得する件数のため，必ずしも最終出力とは一致しない。
 
 ### SMTP 経由メール送信
 
@@ -96,17 +106,23 @@ mailbox（メールボックス名）は必須ではありません。少し変�
 
 ## アーキテクチャ
 
-### get_mail_json.py
+### get_mail_by_rowid.py
 
 1. SQLite（`Envelope Index`）から `messages` テーブルを JOIN し、ROWID・送信日・件名・送信者・メールボックスのメタ情報を取得
 2. `find_emlx_file()` で `.emlx` 実体ファイルを `~/Library/Mail/V*/` 以下から検索
 3. `.emlx` を MIME パースし、ヘッダと本文を抽出（text/plain → text/html → plain text 変換の優先順位）
 4. quoted-printable の未デコードフォールバック対応
 
-### get_unread_mail.py
+### get_mail_list.py
 
-1. SQLite から `read = 0` かつ `mailbox_path LIKE '%INBOX%'` の条件で未読メールを検索
+1. SQLite から `read = 0/1` かつ `mailbox_path LIKE '%INBOX%'` の条件でメールを検索
 2. 結果を JSON 配列として出力（日付・件名・送信者・message_id・rowid）
+
+### get_mail_list_by_date.py
+
+1. SQLite から `read = 0/1` かつ `mailbox_path LIKE '%INBOX%'` の条件でメールを検索
+2. 指定の日付（先頭から部分一致）のメールのみ抽出
+3. 結果を JSON 配列として出力（日付・件名・送信者・message_id・rowid）
 
 ### send_mail.scpt
 
