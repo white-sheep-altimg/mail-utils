@@ -49,7 +49,7 @@ def html_to_plain_text(html_content):
 # 対象のメールの ROWID を指定（引数から受け取るか、直接指定）
 # 例: python3 get_mail_by_rowid.py 46873
 if len(sys.argv) < 2:
-  print('Usage: python3 get_mail_by_rowid.py <ROWID>', file=sys.stderr)
+  print(f"Usage: python3 {sys.argv[0]} <ROWID>", file=sys.stderr)
   sys.exit(1)
 
 target_rowid = sys.argv[1]

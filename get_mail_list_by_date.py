@@ -13,7 +13,7 @@ MAILBOX = config['mailbox']
 # 取得するメールの最大件数
 # 例: python3 get_mail_list.py 20
 if len(sys.argv) < 2:
-  print('Usage: python3 get_mail_list.py <最大件数> [<対象日>] [<メールステータス 0/1>]', file=sys.stderr)
+  print(f"Usage: python3 {sys.argv[0]} <最大件数> [<対象日>] [<メールステータス 0/1>]", file=sys.stderr)
   sys.exit(1)
 
 tdate = ""

@@ -1,8 +1,9 @@
 # mail-utils
 
-macOS Mail の SQLite データベース（`Envelope Index`）からメール情報を取得・出力する Python ユーティリティ、SMTP 経由で送信・返信する Python スクリプト、Mail 経由で送信・返信する AppleScript の集合。Python スクリプトは外部依存なし（標準ライブラリのみ）。
+もはやメールとは無関係なものも追加しています。業務等で利用しているスクリプトを再利用を考慮し，簡略化／整理して置いています。
 
-メールとは無関係ですが，Mac標準のカレンダーへイベントを登録するスクリプトも追加しました。
+macOS Mail の SQLite データベース（`Envelope Index`）からメール情報を取得・出力する Python ユーティリティ、SMTP 経由で送信・返信する Python スクリプト、Mail 経由で送信・返信する AppleScript、Slack API を操作する Python スクリプトの集合。
+
 
 
 ## 前提条件
@@ -81,6 +82,38 @@ python icalendar_add_event.py 'TITLE' 'START' 'END' 'DESCRIPTION' ['LOCATION'] [
 
 日付形式：'2026/08/10 10:00'
 
+### Slack メッセージ送信
+
+```bash
+python3 slack_send_message.py <"メッセージ">
+```
+
+指定した Slack チャンネルにメッセージを送信。長いテキストは `chunk_size` で指定した文字数ごとに分割して複数メッセージとして送信する。
+
+### Slack ファイル内容送信
+
+```bash
+python3 slack_send_file.py <"ファイル名">
+```
+
+ファイルのコンテンツを読み取り、Slack チャンネルにメッセージとして送信。`slack_send_message.py` と同様に `chunk_size` ごとに分割する。
+
+### Slack メッセージ取得
+
+```bash
+python3 slack_get_message.py [<最大件数> | <timestamp>]
+```
+
+引数なしまたは数値を指定した場合: チャンネルの履歴を最新から `limit` 件取得。
+timestamp（ドット付き文字列）を指定した場合: そのスレッドの返信一覧を取得。
+
+### Slack メッセージ受信（Socket Mode）
+
+```bash
+python3 slack_recv_message.py
+```
+
+Slack Bolt の Socket Mode で起動し、ボットがメッセージを受信するたびに自動返信（`RECV: 受信しました`）を行う。
 
 ## 設定
 
@@ -102,6 +135,48 @@ python icalendar_add_event.py 'TITLE' 'START' 'END' 'DESCRIPTION' ['LOCATION'] [
 | `mailbox` | メールボックス名 |
 
 mailbox（メールボックス名）は必須ではありません。少し変わった運用をしているのでSQLで牽くと分かりにくく，便宜上追加したものです。
+
+### Slack 設定（`.env` または `config.ini`）
+
+Slack 関連スクリプトは，`.env` ファイルまたは `config.ini` の `[slack]` / `[bolt]` セクションから設定を読み込む。
+`.env` 優先，見つからなければ `config.ini` から読み込む。
+
+**.env**
+| 変数名 | 説明 |
+|--------|------|
+| `bot_token` | Slack Bot User OAuth Token（`xoxb-...`） |
+| `channel` | 送信先・取得元のチャンネル ID |
+| `limit` | メッセージ取得件数のデフォルト値 |
+| `chunk_size` | メッセージ分割時の1チャンクあたりの文字数 |
+| `bolt_app_token` | Slack App Level Token（`xapp-...`、Socket Mode 用） |
+| `bolt_bot_token` | Bot User OAuth Token（Bolt 用） |
+
+```env
+bot_token = xoxb-...
+channel = Cxxxxxxxxxx
+limit = 10
+chunk_size = 2000
+
+bolt_app_token = xapp-...
+bolt_bot_token = xoxb-...
+```
+
+`example.env` をコピーして `.env` を作成し、各トークンを環境に合わせて編集する。
+
+**config.ini**
+```ini
+[slack]
+bot_token = xoxb-...
+channel = Cxxxxxxxxxx
+limit = 10
+chunk_size = 2000
+
+[bolt]
+app_token = xapp-...
+bot_token = xoxb-...
+```
+
+`config.ini-example` をコピーして `config.ini` を作成し、各トークンを環境に合わせて編集する。
 
 
 ## アーキテクチャ
@@ -148,6 +223,30 @@ mailbox（メールボックス名）は必須ではありません。少し変�
 2. `get_mail_by_rowid.py` を subprocess で実行し、返信元メールのヘッダ・本文を取得
 3. 本文を `> ` プレフィックス付きで引用
 4. `In-Reply-To` / `References` ヘッダを設定して SMTP 経由で送信
+
+### slack_send_message.py
+
+1. `.env` または `config.ini` からトークン・チャンネル・チャンクサイズを読み込む
+2. 引数のメッセージを `chunk_size` 文字ごとに分割
+3. `chat.postMessage` API でチャンクごとに POST 送信
+
+### slack_send_file.py
+
+1. `.env` または `config.ini` からトークン・チャンネル・チャンクサイズを読み込む
+2. 引数のファイルを読み込み、内容を `chunk_size` ごとに分割
+3. `chat.postMessage` API でチャンクごとに POST 送信
+
+### slack_get_message.py
+
+1. `.env` または `config.ini` からトークン・チャンネル・取得件数を読み込む
+2. 引数が数値の場合: `conversations.history` API でチャンネル履歴を取得
+3. 引数が timestamp（ドット付き）の場合: `conversations.replies` API でスレッド返信を取得
+
+### slack_recv_message.py
+
+1. `.env` または `config.ini` から App Token・Bot Token を読み込む
+2. `slack_bolt.App` を初期化し、Socket Mode で接続
+3. `message` イベントを受信すると自動で `say()` による返信
 
 ## 設計上の注意
 

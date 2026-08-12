@@ -1,0 +1,9 @@
+[slack]
+bot_token = xoxb-xxxxxxxxxxxxxx-xxxxxxxxxxxxxx-xxxxxxxxxxxxxxxxxxxxxxxx
+channel = Cxxxxxxxxxx
+limit = 10
+
+
+[bolt]
+app_token = xapp-X-XXXXXXXXXXX-XXXXXXXXXXXXXX-XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+bot_token = xoxb-XXXXXXXXXXXXXX-XXXXXXXXXXXXXX-XXXXXXXXXXXXXXXXXXXXXXXX
