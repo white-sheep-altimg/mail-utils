@@ -25,8 +25,6 @@ python3 get_mail_by_rowid.py <ROWID>
 
 指定した ROWID のメールを JSON 形式で出力。ヘッダ情報と本文（text/plain 優先、なければ text/html をテキスト変換）を含む。
 
-指定した ROWID のメールを JSON 形式で出力。ヘッダ情報と本文（text/plain 優先、なければ text/html をテキスト変換）を含む。
-
 ### メール一覧取得
 
 ```bash
@@ -97,9 +95,10 @@ python icalendar_add_event.py 'TITLE' 'START' 'END' 'DESCRIPTION' ['LOCATION'] [
 ```bash
 python icalendar_get_event.py 'START' 'END' 'CALENDAR'
 python icalendar_get_event.py 'TITLE' 'START' 'END' 'CALENDAR'
+python icalendar_get_event.py 'EMAIL' 'START' 'END' 'CALENDAR'
 ```
 
-TITLEが指定された場合は，タイトルの部分一致で検索
+TITLEが指定された場合は，タイトルの部分一致で検索。EMAILが指定された場合は参加者を対象にイベントを検索。
 
 ### カレンダーのイベント更新
 

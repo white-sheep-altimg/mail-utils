@@ -22,9 +22,11 @@ def event_to_json(events):
   end = event.end.strftime('%Y/%m/%d %H:%M')
   calendar = event.calendar
   notes = event.notes
+  url = event.url
   if not location: location = ""
   if not attendees: attendees = "[]"
   if not notes: notes = ""
+  if not url: url = ""
   notes = notes.replace('\n', '\\n')
   json +=  "    {\n"
   json += f"      \"event_id\":    \"{event_id}\",\n"
@@ -35,6 +37,7 @@ def event_to_json(events):
   json += f"      \"location\":    \"{location}\",\n"
   json += f"      \"attendees\":   {attendees},\n"
   json += f"      \"notes\":       \"{notes}\",\n"
+  json += f"      \"url\":         \"{url}\",\n"
   json += f"      \"calendar\":    \"{calendar}\"\n"
   json +=  "    }\n"
   json += "  ]\n"
