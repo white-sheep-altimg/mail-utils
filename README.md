@@ -80,15 +80,18 @@ Message-ID からメールを検索し、返信ウィンドウを開いて定型
 python icalendar_create_event.py 'TITLE' 'START' 'END' 'CALENDAR' 'DESCRIPTION'
 ```
 
-日付形式：'2026/08/10 10:00'
+- 日付形式：'2026/08/10 10:00'
+- EventKitの制限で参加者を登録することはできない。icsファイル経由のスクリプトを利用してください。
+
 
 ### カレンダーへのイベント登録（icsファイル経由）
 
 ```bash
-python icalendar_add_event.py 'TITLE' 'START' 'END' 'DESCRIPTION' ['LOCATION'] ['URL']
+python icalendar_add_event.py 'TITLE' 'START' 'END' 'DESCRIPTION' ['LOCATION'] ['URL'] ['ATTENDEES']
 ```
 
-日付形式：'2026/08/10 10:00'
+- 日付形式：'2026/08/10 10:00'
+- 参加者: 'foo@example.com,bar@example.com'（','の前後に空白を入れない）
 
 ### カレンダーからのイベント取得
 
