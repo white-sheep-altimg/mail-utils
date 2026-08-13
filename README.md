@@ -2,7 +2,7 @@
 
 もはやメールとは無関係なものも追加しています。業務等で利用しているスクリプトを再利用を考慮し，簡略化／整理して置いています。
 
-macOS Mail の SQLite データベース（`Envelope Index`）からメール情報を取得・出力する Python ユーティリティ、SMTP 経由で送信・返信する Python スクリプト、Mail 経由で送信・返信する AppleScript、Slack API を操作する Python スクリプトの集合。
+macOS Mail の SQLite データベース（`Envelope Index`）からメール情報を取得・出力する Python ユーティリティ、SMTP 経由で送信・返信する Python スクリプト、Mail 経由で送信・返信する AppleScript、Slack API を操作する Python スクリプト，カレンダー操作スクリプトの集合。
 
 
 
@@ -12,6 +12,7 @@ macOS Mail の SQLite データベース（`Envelope Index`）からメール情
 - Python スクリプト実行前に「フルディスクアクセス」で Terminal / Python に権限を付与すること
 - AppleScript スクリプトは Mail と System Events へのアクセス許可を許可すること
 - SMTP 経由送信スクリプトは `email_config.py` に SMTP 設定を記載（`email_config.py-example` をコピーして使用）
+- カレンダー操作スクリプトは maccal に依存している
 
 ## コマンド
 
@@ -77,10 +78,33 @@ Message-ID からメールを検索し、返信ウィンドウを開いて定型
 ### カレンダーへのイベント登録
 
 ```bash
+python icalendar_create_event.py 'TITLE' 'START' 'END' 'CALENDAR' 'DESCRIPTION'
+```
+
+日付形式：'2026/08/10 10:00'
+
+### カレンダーへのイベント登録（icsファイル経由）
+
+```bash
 python icalendar_add_event.py 'TITLE' 'START' 'END' 'DESCRIPTION' ['LOCATION'] ['URL']
 ```
 
 日付形式：'2026/08/10 10:00'
+
+### カレンダーからのイベント取得
+
+```bash
+python icalendar_get_event.py 'START' 'END' 'CALENDAR'
+python icalendar_get_event.py 'TITLE' 'START' 'END' 'CALENDAR'
+```
+
+TITLEが指定された場合は，タイトルの部分一致で検索
+
+### カレンダーのイベント更新
+
+```bash
+python icalendar_update_event.py 'EVENT_ID' 'TITLE' 'START' 'END' 'DESCRIPTION'
+```
 
 ### Slack メッセージ送信
 
