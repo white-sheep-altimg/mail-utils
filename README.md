@@ -12,7 +12,8 @@ macOS Mail の SQLite データベース（`Envelope Index`）からメール情
 - Python スクリプト実行前に「フルディスクアクセス」で Terminal / Python に権限を付与すること
 - AppleScript スクリプトは Mail と System Events へのアクセス許可を許可すること
 - SMTP 経由送信スクリプトは `email_config.py` に SMTP 設定を記載（`email_config.py-example` をコピーして使用）
-- カレンダー操作スクリプトは maccal に依存している
+- カレンダー操作スクリプトは [maccal](https://github.com/appenz/maccal) に依存している
+- maccal は Python 3.13以上を要求するため，3.12 で利用する場合は[こちら](https://github.com/white-sheep-altimg/maccal)で対応
 
 ## コマンド
 
