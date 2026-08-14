@@ -109,6 +109,12 @@ TITLEが指定された場合は，タイトルの部分一致で検索。EMAIL�
 python icalendar_update_event.py 'EVENT_ID' 'TITLE' 'START' 'END' 'DESCRIPTION'
 ```
 
+### カレンダーからイベント削除
+
+```bash
+python icalendar_delete_event.py 'EVENT_ID'
+```
+
 ### Slack メッセージ送信
 
 ```bash
