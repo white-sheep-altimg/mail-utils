@@ -91,7 +91,7 @@ python icalendar_add_event.py 'TITLE' 'START' 'END' 'DESCRIPTION' ['LOCATION'] [
 ```
 
 - 日付形式：'2026/08/10 10:00'
-- 参加者: 'foo@example.com,bar@example.com'（','の前後に空白を入れない）
+- 参加者: 'foo@example.com,bar@example.com'
 
 ### カレンダーからのイベント取得
 
