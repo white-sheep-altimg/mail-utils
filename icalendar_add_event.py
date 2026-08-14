@@ -23,7 +23,8 @@ def icalendar_add_event(email, hostname, title, start, end, description, locatio
 
   attendees = f"ATTENDEE;CN=\"{email}\";CUTYPE=INDIVIDUAL;EMAIL=\"{email}\";PARTSTAT=ACCEPTED:mailto:{email}"
   for mail in mails:
-    attendees += f"\nATTENDEE;CN=\"{mail}\";CUTYPE=INDIVIDUAL;EMAIL=\"{mail}\":mailto:{mail}"
+    addr = mail.replace(" ", "")
+    attendees += f"\nATTENDEE;CN=\"{addr}\";CUTYPE=INDIVIDUAL;EMAIL=\"{addr}\":mailto:{addr}"
 
   ics = f'''
 BEGIN:VCALENDAR
