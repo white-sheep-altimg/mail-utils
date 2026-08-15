@@ -146,7 +146,11 @@ timestamp（ドット付き文字列）を指定した場合: そのスレッド
 python3 slack_recv_message.py
 ```
 
-Slack Bolt の Socket Mode で起動し、ボットがメッセージを受信するたびに自動返信（`RECV: 受信しました`）を行う。
+- Slack Bolt の Socket Mode で起動
+- ボットがメッセージを受信するたびに自動返信を行う
+- メンションの受信不具合回避や効率のためメンションも `message` で処理する
+- スラッシュコマンドのサンプル
+
 
 ## 設定
 
