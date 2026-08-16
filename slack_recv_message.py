@@ -57,6 +57,7 @@ def recv_message(message, say):
   # 返信・処理
   if mentioned:
     # メンション
+    # 正常ならば app_mentionも，ここも呼ばれる
     say(f"メンション: {message}")
   else:
     # メッセージ
@@ -74,12 +75,27 @@ def message_receive(message, say):
   recv_message(message, say)
 
 
+# メンション
+@app.event("app_mention")
+def mention_handler(body, say):
+  # 'app_mention' には ack は不要
+  mention = body["event"]
+  text = mention["text"]
+  channel = mention["channel"]
+  thread_ts = mention["ts"]
+  text = f"Mention: {text}"
+  time.sleep(30)
+  # say(text=text, channel=channel, thread_ts=thread_ts)
+  say(text)
+
+
+# スラッシュコマンド
 @app.command("/test")
 def handle_hello_command(ack, command, respond):
-    # まず ack() を呼んで応答を返す（3秒ルール回避）
-    ack()
-    # デフォルトは発行者のみのエフェメラルメッセージ
-    respond(f"こんにちは、<@{command['user_id']}> さん！")
+  # まず ack() を呼んで応答を返す（3秒ルール回避）
+  ack()
+  # デフォルトは発行者のみのエフェメラルメッセージ
+  respond(f"こんにちは、<@{command['user_id']}> さん！")
 
 
 if __name__ == "__main__":
