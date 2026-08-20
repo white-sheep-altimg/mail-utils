@@ -25,6 +25,18 @@ python3 get_mail_by_rowid.py <ROWID>
 
 指定した ROWID のメールを JSON 形式で出力。ヘッダ情報と本文（text/plain 優先、なければ text/html をテキスト変換）を含む。
 
+### 未読メール数取得
+
+```bash
+python3 get_mail_count.py
+```
+
+### 未読メール数取得（AppleScript版）
+
+```bash
+osascript get_mail_count.scpt
+```
+
 ### メール一覧取得
 
 ```bash

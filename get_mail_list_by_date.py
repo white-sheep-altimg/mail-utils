@@ -132,7 +132,7 @@ for i, row in enumerate(qrows, 1):
   json +=  "    }"
   if i < len(qrows):
     json += ","
-    json += "\n"
+  json += "\n"
 json += "\n  ]\n"
 json += "}\n"
 

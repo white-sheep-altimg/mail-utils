@@ -44,14 +44,14 @@ if not os.path.exists(db_path):
     db_path = matches[0]
   else:
     print(
-        json.dumps(
-            {
-                'error': (
-                    'Envelope Indexが見つかりませんでした（フルディスクアクセスの権限をご確認ください）'
-                )
-            },
-            ensure_ascii=False,
-        )
+      json.dumps(
+        {
+          'error': (
+            'Envelope Indexが見つかりませんでした（フルディスクアクセスの権限をご確認ください）'
+          )
+        },
+        ensure_ascii=False,
+      )
     )
     sys.exit(1)
 
@@ -81,6 +81,7 @@ ORDER BY m.date_sent DESC
 LIMIT {maxnum};
 """
 
+# 3. 中身を全て取得するfetchall()を使って、printする。
 cursor.execute(query)
 rows = cursor.fetchall()
 conn.close()
@@ -94,29 +95,28 @@ if not rows:
   )
   sys.exit(1)
 
-
-# 3. 中身を全て取得するfetchall()を使って、printする。
 json  = "{\n"
 json += "  \"emails\": [\n"
 for i, row in enumerate(rows, 1):
-    date = row['sent_date'].replace('-', '/')
-    subject = row['subject_text'].replace('"', "")
-    sender = row['sender_address'].replace('"', "")
-    message_id = row['message_id'].replace('"', "")
-    rowid = row['rowid']
-    mailbox = row['mailbox']
-    mailbox = MAILBOX[mailbox] if mailbox in MAILBOX else mailbox
-    json +=  "    {\n"
-    json += f"      \"date\":       \"{date}\",\n"
-    json += f"      \"subject\":    \"{subject}\",\n"
-    json += f"      \"sender\":     \"{sender}\",\n"
-    json += f"      \"message_id\": \"{message_id}\",\n"
-    json += f"      \"mailbox\":    \"{mailbox}\",\n"
-    json += f"      \"rowid\":      {rowid}\n"
-    json +=  "    }"
-    if i < len(rows):
-        json += ","
-    json += "\n"
+  print(f"ROW: {row}")
+  date = row['sent_date'].replace('-', '/')
+  subject = row['subject_text'].replace('"', "")
+  sender = row['sender_address'].replace('"', "")
+  message_id = row['message_id'].replace('"', "")
+  rowid = row['rowid']
+  mailbox = row['mailbox']
+  mailbox = MAILBOX[mailbox] if mailbox in MAILBOX else mailbox
+  json +=  "    {\n"
+  json += f"      \"date\":       \"{date}\",\n"
+  json += f"      \"subject\":    \"{subject}\",\n"
+  json += f"      \"sender\":     \"{sender}\",\n"
+  json += f"      \"message_id\": \"{message_id}\",\n"
+  json += f"      \"mailbox\":    \"{mailbox}\",\n"
+  json += f"      \"rowid\":      {rowid}\n"
+  json +=  "    }"
+  if i < len(rows):
+    json += ","
+  json += "\n"
 json += "  ]\n"
 json += "}\n"
 
